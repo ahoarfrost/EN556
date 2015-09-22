@@ -12,7 +12,8 @@ There are three scripts to this processing:
 
 
 There are also several additional files with necessarily input into the scripts:
-1. 
+1. FLAElapsedTimeEN556.csv - contains sample unique ID, time sampled, and elapsed time (calculated from time sampled)
+2. 
 
 You will start with the raw data in .asc format. 
 These are chromatogram reads of fluorescence over run time on the GPC.
