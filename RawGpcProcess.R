@@ -3,19 +3,20 @@
 
 #name folder where your raw asc files want to process are
 ascDir <- "raw-gpc-data-asc"
-#checks if a folder for containing slant corrected data output called "slant-corrected-data/" exists. If it doesn't, it creates one.
-if (file.exists("slant-corrected-data-csv")) {
-    csvDir <- "slant-corrected-data-csv"
+#name folder where want your slant corrected data in csv format to be stored (folder doesn't need to exist yet!)
+csvDir <- "slant-corrected-data-csv"
+#name folder where want your chromatogram plots in png format to be stored (doesn't need to exist yet either)
+pngDir <- "slant-corrected-chroms-png"
+
+#checks if a folder for containing slant corrected data output called csvDir exists. If it doesn't, it creates one.
+if (file.exists(csvDir)) {
 } else {
-    dir.create("slant-corrected-data-csv")
-    csvDir <- "slant-corrected-data-csv"
+    dir.create(csvDir)
 }
-#checks if folder to contain chromatogram output called "slant-corrected-chroms-png/" exists. If it doesn't, it creates it.
-if (file.exists("slant-corrected-chroms-png")) {
-    pngDir <- "slant-corrected-chroms-png"
+#checks if folder to contain chromatogram plot output called pngDir exists. If it doesn't, it creates it.
+if (file.exists(pngDir)) {
 } else {
-    dir.create("slant-corrected-chroms-png")
-    pngDir <- "slant-corrected-chroms-png"
+    dir.create(pngDir)
 }
 
 
