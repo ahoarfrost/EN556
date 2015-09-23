@@ -1,8 +1,8 @@
 # EN556 Script Tutorial
 
-###*Step by step instructions using example data.*  
+*###Step by step instructions using example data.*  
 
-####*Today we'll just be going through processing raw GPC data and calculating std bins. 
+*####Today we'll just be going through processing raw GPC data and calculating std bins. 
 Stay tuned for calculating rates!*
 
 
@@ -33,7 +33,7 @@ Stay tuned for calculating rates!*
         * stds-gpc2-052715
      
      
- 3. ###Slant correct raw asc data - **using RawGpcProcess.R**
+ 3. ###Slant correct raw asc data - using RawGpcProcess.R
  
    1. In RStudio, define your working directory using setwd() as the expt folder containing all your downloaded data/scripts
 
@@ -43,9 +43,9 @@ Stay tuned for calculating rates!*
    
    3. Adjust ascDir (line 5), csvDir (line 6), and pngDir (line 7) within body RawGpcProcess.R. 
    
-       `ascDir <- "DemoGpcData/raw-gpc-data-asc"  
-        csvDir <- "DemoGpcData/slant-corrected-data-csv"  
-        pngDir <- "DemoGpcData/slant-corrected-chroms-png"`
+       `ascDir <- "DemoGpcData/raw-gpc-data-asc"`  
+       `csvDir <- "DemoGpcData/slant-corrected-data-csv"`   
+       `pngDir <- "DemoGpcData/slant-corrected-chroms-png"`
 
    
    4. Now, run the script! Two ways:
@@ -58,6 +58,7 @@ Stay tuned for calculating rates!*
 
  *Now you should see two new folders, one containing your slant corrected data and the other 
 containing your chromatograms. There should be an equal number of files in each folder*
+
 
 
  4. ###Try slant corrected raw GPC asc data for your standard runs in the folder stds-gpc2-052715
@@ -74,9 +75,9 @@ containing your chromatograms. There should be an equal number of files in each 
       
    3.    Change csvDir (line 9), outputPath (line 11), and pngPath (line 12). 
    
-      `csvDir <- "stds-gpc2-052715/slant-corrected-data-csv"     
-       outputPath <- "stds-gpc2-052715/stds-gpc2-052715.csv"  
-       pngPath <- "stds-gpc2-052715/stds-gpc2-052715.png"`
+      `csvDir <- "stds-gpc2-052715/slant-corrected-data-csv"`      
+      `outputPath <- "stds-gpc2-052715/stds-gpc2-052715.csv"`   
+      `pngPath <- "stds-gpc2-052715/stds-gpc2-052715.png"`   
        
    4. Run the script!
    
