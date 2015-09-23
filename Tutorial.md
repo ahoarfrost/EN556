@@ -34,6 +34,6 @@
      
  3. ###Slant correct raw asc data - using RawGpcProcess.R 
  
-   1. In RStudio, define your working directory using setwd() as the folder containing all your downloaded data/scripts
+   1. In RStudio, define your working directory using setwd() as the expt folder containing all your downloaded data/scripts
 
        `setwd("~/LabDemo")`
