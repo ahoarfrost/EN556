@@ -1,8 +1,8 @@
 # EN556 Script Tutorial
 
-*###Step by step instructions using example data.*  
+*Step by step instructions using example data.*  
 
-*####Today we'll just be going through processing raw GPC data and calculating std bins. 
+*Today we'll just be going through processing raw GPC data and calculating std bins. 
 Stay tuned for calculating rates!*
 
 
