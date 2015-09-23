@@ -7,7 +7,7 @@ All together, they take you from raw asc GPC output to hydrolysis rates, calcula
 bins along the way. 
 
 
-**There are three scripts to this processing:**
+###There are three scripts to this processing:
  1. RawGpcProcess.R - takes .asc files, slant corrects them, save slant-corrected data in 
  csv format; also auto-generates a chromatogram image and saves as a png
  2. CalculateStdBins.R - takes a destination folder containing the slant corrected std 
