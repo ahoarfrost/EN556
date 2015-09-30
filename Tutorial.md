@@ -69,6 +69,9 @@ containing your chromatograms. There should be an equal number of files in each 
  
    1. Open CalculateStdBins.R in RStudio
    
+   2. If you don't already have ggplot installed, install it:
+      `install.packages("ggplot2")`
+   
    2. Change working directory to folder want to work in, parent or stds-gpc2-052715
    
       `setwd("~/LabDemo")`
