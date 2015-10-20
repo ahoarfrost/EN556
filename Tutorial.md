@@ -90,17 +90,92 @@ containing your chromatograms. There should be an equal number of files in each 
    5. Check that your bins look good! Look at png, make sure dashed lines are at real intersections.
    
    
+ 6. ###Manual curation of chromatograms to get final csvs
+   
+   1. At this point, you can look at the pngs you've output and determine if you need to do any reruns. 
+   
+   2. Run any reruns on the GPC, and slant correct them and generate pngs of chromatograms using rawGpcProcess.R. 
+     * Keep them separate from your originals in a way you understand (see my note on data organization below). 
+   
+   3. Once you have your *final* slant-corrected csvs you want to use for 
 
-*Now you have all your data slant-corrected, you have std bins, and you're ready to calculate a rate! Stay tuned.*
-
- 
 
 ##A note on data organization
 
-I like to have a project folder (e.g. EN556). Within this, I'll have GpcOriginal folders 
-containing raw-asc, -csv, and -png folders with the corresponding GPC data. Then I'll have 
-another folder, GpcReruns1, with another set of -asc, -csv, and -png folders. I might have 
-GpcReruns2 and GpcReruns3 too. Then, I'll keep my scripts in the main EN556 folder, and 
-adjust my ascDirs, csvDirs, pngDirs, etc. to reflect these paths. 
+I like to have a project folder (e.g. EN556, or LabDemo). Within this, I'll have GpcOriginal folders 
+containing raw-asc, -csv, and -png folders with the corresponding GPC data (in the case of this demo, 
+that would be DemoGpcData). Then I'll have another folder, GpcReruns1, with another set of -asc, -csv, 
+and -png folders. I might have GpcReruns2 and GpcReruns3 too. When I know which run of a sample I want
+to use as my final csv, I record that in the appropriate column of FlaMasterList, and copy (not cut!) 
+that csv to the "csvs-for-rates" in my main working directory. Rates will be calculated on whatever csvs
+are in that folder. 
+   
+   
+ 7. ###Calculate Hydrolysis Rates using FlaRatesEN556_bulk.R and FlaRatesEN556_GF.R
+ 
+   1. Update your scripts and reference data from my Github. 
+   
+     1. If you've already cloned the repository using Git, this is easy. *copy paste this into Terminal/Command Line:*   
+     
+            `git pull`
+            
+       * This will update any files that I've changed since the last time you 
+   
+   2. If you just downloaded the zip file (a la step 1)ii) ), you'll have to download again and copy everything into your working directory again
+     * When asked 'file already exists, do you want to replace it?' say yes. 
+   
+   3. You should now have the following additional scripts and reference files in your wd:
+   
+     * FlaRatesEN556_bulk.R    
+        *This script calculates rates for bulk water incubations*
+     * FlaRatesEN556_GF.R       
+        *This script calculates rates for gravity filtration incubations*
+     * FlaElapsedTimeEN556.csv  
+        *This reference file sampling times for each sample ID, entered
+       manually from the lab notebook, and the elapsed time calculated manually/with excel.*
+     * HydrolysisCutsInfo.csv   
+        *This reference file has the info about substrate mw, # of cuts
+       to get to a particular std bin, etc. need to calculate rates. This never changes.*
+     * VolumesFilteredEN556_GF.csv      
+        *This reference file has volume filtered for GF incubations at a particular stn-depth. 
+       Recorded manually from sampling sheets.*
+     * FlaMasterListEN556.csv     
+        *This file has your calculated hydrolysis rates in them, the stdbin file to use for 
+       each sample that you have manually entered, and an extra column for metadata/notes. If 
+       this is the first time you've calculated hydrolysis rates, it will just be column headers, and 
+       the unique.id and std.ref data you've entered. See readme.md on my github for description of column headers.*
+     
+   4. In your main working directory (~/LabDemo), create new folder: "csvs-for-rates"
+   
+   5. Copy (not cut!) paste final csvs you want to calculate rates for into "csvs-for-rates" folder.
+      For this demo, this is all the contents in DemoGpcData/slant-corrected-data-csv.
+   
+   6. Copy (not cut!) paste all stdbins.csvs want to use from the stds folders into main directory (LabDemo).
+      For this demo that's only one, stdbins-gpc2-052715.csv.
+   
+   7. Make sure your working directory in R is set to your main folder (in this example, setwd("~/LabDemo") 
+   
+   8. Open FlaRatesEN556_bulk.R in RStudio.   
+   
+   9. Check lines 1:25. Are file names correct, the substrate names you're using correct?
+   
+   10. Source FlaRatesEN556.R!
+      * Press "Source" Button, or:
+      * copy paste `source("FlaRatesEN556_bulk.R")`
+      
+      Now if you open FlaMasterListEN556.csv, should see rates for bulk incubations.
+      
+   11. Open FlaRatesEN556_GF.R in RStudio
+   
+   12. Check lines 1:32. Are file names correct, substrate names using correct, filter fraction correct?
+   
+   13. Source FlaRatesEN556_GF.R
+      * Press "Source" Button, or:
+      * copy paste `source("FlaRatesEN556_GF.R")`
+      
+Now if you open FlaMasterListEN556.csv, you will see those rates in the appropriate columns as well.
+
+
+#Have Fun!
    
    
