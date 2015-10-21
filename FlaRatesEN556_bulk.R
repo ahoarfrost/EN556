@@ -189,7 +189,7 @@ for (j in 1:length(RatesMasterList)) {
         #append kcR2 to R2, so can insert into FLAMaster 
         finalR <- append(R2,kcR2,after=length(R2))
         
-        print("final rates to insert:")
+        print(paste("final rates to insert:",names(TimeList[[j]][x])))
         print(finalR)
         
         #make sure colnames of FLAMaster match colnames finalR. If don't, throw a warning
