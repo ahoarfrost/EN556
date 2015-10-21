@@ -119,12 +119,13 @@ are in that folder.
      
             `git pull`
             
-       * This will update any files that I've changed since the last time you 
+       * This will update any files that I've changed since the last time you pulled or cloned the library
    
-   2. If you just downloaded the zip file (a la step 1)ii) ), you'll have to download again and copy everything into your working directory again
-     * When asked 'file already exists, do you want to replace it?' say yes. 
+     2. If you just downloaded the zip file (a la step 1)ii) ), you'll have to download again,
+      unzip and copy everything into your working directory again
+       * When asked 'file already exists, do you want to replace it?' say yes. 
    
-   3. You should now have the following additional scripts and reference files in your wd:
+   2. You should now have the following additional scripts and reference files in your wd:
    
      * FlaRatesEN556_bulk.R    
         *This script calculates rates for bulk water incubations*
@@ -145,31 +146,31 @@ are in that folder.
        this is the first time you've calculated hydrolysis rates, it will just be column headers, and 
        the unique.id and std.ref data you've entered. See readme.md on my github for description of column headers.*
      
-   4. In your main working directory (~/LabDemo), create new folder: "csvs-for-rates"
+   3. In your main working directory (~/LabDemo), create new folder: "csvs-for-rates"
    
-   5. Copy (not cut!) paste final csvs you want to calculate rates for into "csvs-for-rates" folder.
+   4. Copy (not cut!) paste final csvs you want to calculate rates for into "csvs-for-rates" folder.
       For this demo, this is all the contents in DemoGpcData/slant-corrected-data-csv.
    
-   6. Copy (not cut!) paste all stdbins.csvs want to use from the stds folders into main directory (LabDemo).
+   5. Copy (not cut!) paste all stdbins.csvs want to use from the stds folders into main directory (LabDemo).
       For this demo that's only one, stdbins-gpc2-052715.csv.
    
-   7. Make sure your working directory in R is set to your main folder (in this example, setwd("~/LabDemo") 
+   6. Make sure your working directory in R is set to your main folder (in this example, setwd("~/LabDemo") 
    
-   8. Open FlaRatesEN556_bulk.R in RStudio.   
+   7. Open FlaRatesEN556_bulk.R in RStudio.   
    
-   9. Check lines 1:25. Are file names correct, the substrate names you're using correct?
+   8. Check lines 1:25. Are file names correct, the substrate names you're using correct?
    
-   10. Source FlaRatesEN556.R!
+   9. Source FlaRatesEN556.R!
       * Press "Source" Button, or:
       * copy paste `source("FlaRatesEN556_bulk.R")`
       
       Now if you open FlaMasterListEN556.csv, should see rates for bulk incubations.
       
-   11. Open FlaRatesEN556_GF.R in RStudio
+   10. Open FlaRatesEN556_GF.R in RStudio
    
-   12. Check lines 1:32. Are file names correct, substrate names using correct, filter fraction correct?
+   11. Check lines 1:32. Are file names correct, substrate names using correct, filter fraction correct?
    
-   13. Source FlaRatesEN556_GF.R
+   12. Source FlaRatesEN556_GF.R
       * Press "Source" Button, or:
       * copy paste `source("FlaRatesEN556_GF.R")`
       

@@ -69,7 +69,7 @@ print(summary(TimeList))
 
 for (j in 1:length(RatesMasterList)) {
     #Detect which std bins to use for this incubation set
-    stdsID <- as.character(StdsForRates[names(RatesMasterList[[j]][1]),])
+    stdsID <- as.character(StdsForRates[names(TimeList[[j]][1]),])
     #Read in info about cutoffs for std bins from csv with correct stds
     StdBins <- read.csv(paste(stdsID,".csv",sep=""),header=TRUE)
     #Define std bins from StdBins.csv
