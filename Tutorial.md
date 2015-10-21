@@ -140,20 +140,17 @@ are in that folder.
         *This script calculates rates for bulk water incubations*
      * FlaRatesEN556_GF.R       
         *This script calculates rates for gravity filtration incubations*
-     * FlaElapsedTimeEN556.csv  
-        *This reference file sampling times for each sample ID, entered
-       manually from the lab notebook, and the elapsed time calculated manually/with excel.*
+     * FlaTimepointsStdRefsEN556.csv  
+        *This reference file is manually created. You enter sampling times for each sample ID
+        (from the lab notebook), the elapsed time calculated manually/with excel, and the std
+        bins file (copy paste the file name) you want to use to calculate rates for that file.*
      * HydrolysisCutsInfo.csv   
         *This reference file has the info about substrate mw, # of cuts
        to get to a particular std bin, etc. need to calculate rates. This never changes.*
      * VolumesFilteredEN556_GF.csv      
         *This reference file has volume filtered for GF incubations at a particular stn-depth. 
        Recorded manually from sampling sheets.*
-     * FlaMasterListEN556.csv     
-        *This file has your calculated hydrolysis rates in them, the stdbin file to use for 
-       each sample that you have manually entered, and an extra column for metadata/notes. If 
-       this is the first time you've calculated hydrolysis rates, it will just be column headers, and 
-       the unique.id and std.ref data you've entered. See readme.md on my github for description of column headers.*
+ 
      
    3. In your main working directory (~/LabDemo), create new folder: "csvs-for-rates"
    
@@ -163,17 +160,19 @@ are in that folder.
    5. Copy (not cut!) paste all stdbins.csvs want to use from the stds folders into main directory (LabDemo).
       For this demo that's only one, stdbins-gpc2-052715.csv.
    
-   6. Make sure your working directory in R is set to your main folder (in this example, setwd("~/LabDemo") 
+   6. Make sure your working directory in R is set to your main folder (in this example, `setwd("~/LabDemo"`) 
    
    7. Open FlaRatesEN556_bulk.R in RStudio.   
    
-   8. Check lines 1:25. Are file names correct, the substrate names you're using correct?
+   8. Check lines 1:24. Are file names correct, the substrate names you're using correct?
    
    9. Source FlaRatesEN556.R!
       * Press "Source" Button, or:
       * copy paste `source("FlaRatesEN556_bulk.R")`
       
-      Now if you open FlaMasterListEN556.csv, should see rates for bulk incubations.
+      Now there will be a new file in your working directory, FlaMasterListEN556_bulk.csv. (If
+      this file already existed, it will add on to the existing file). Now if you open 
+      FlaMasterListEN556_bulk.csv, you should see rates for bulk incubations.
       
    10. Open FlaRatesEN556_GF.R in RStudio
    
@@ -182,8 +181,8 @@ are in that folder.
    12. Source FlaRatesEN556_GF.R
       * Press "Source" Button, or:
       * copy paste `source("FlaRatesEN556_GF.R")`
-      
-Now if you open FlaMasterListEN556.csv, you will see those rates in the appropriate columns as well.
+
+    Now if you open FlaMasterListEN556_GF.csv, you will see those rates in the appropriate columns as well.
 
 
 #Have Fun!
