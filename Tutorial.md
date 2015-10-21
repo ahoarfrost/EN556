@@ -7,12 +7,16 @@ Stay tuned for calculating rates!*
 
 
  1. ###Download scripts and accompanying files. Two ways:
-   1. Clone from Github. This requires you to have a Github account and make light use of git. I'll skip this for today, but a git/Github tutorial down the road may be of interest. Git/github is great for version control, collaboration, backing up your work and reproducibility.
+   1. Clone from Github. This requires you to have a Github account and make light use of git. 
+   I'll skip this for today, but a git/Github tutorial down the road may be of interest. Git/github 
+   is great for version control, collaboration, backing up your work and reproducibility.
    
    2. Download as zip file from my Github without using Git: 
      1. Go to:  https://github.com/ahoarfrost/EN556
      2. On right side screen, click 'Download ZIP'
-     3. On your local computer, unzip folder and move its contents into your working directory. 
+     3. On your local computer, unzip folder and rename to be what you want your working directory 
+     to be. I'm calling my folder "Lab Demo" and putting it in my home directory, so my working 
+     directory will be "~/LabDemo". 
      
  
  2. ###Download demo data
@@ -97,7 +101,11 @@ containing your chromatograms. There should be an equal number of files in each 
    2. Run any reruns on the GPC, and slant correct them and generate pngs of chromatograms using rawGpcProcess.R. 
      * Keep them separate from your originals in a way you understand (see my note on data organization below). 
    
-   3. Once you have your *final* slant-corrected csvs you want to use for 
+   3. Once you have your *final* slant-corrected csvs you want to use for calculating rates, copy 
+   paste those files into a folder called "csvs-for-rates" (see rates tutorial below).
+      * *Keep notes on which version of GPC run you use for your rate calculations (original, 
+      rerun1, rerun2, etc). This is probably easiest to do as a set of notes in a text file 
+      or your lab notebook.*
 
 
 ##A note on data organization
@@ -109,7 +117,8 @@ and -png folders. I might have GpcReruns2 and GpcReruns3 too. When I know which 
 to use as my final csv, I record that in the appropriate column of FlaMasterList, and copy (not cut!) 
 that csv to the "csvs-for-rates" in my main working directory. Rates will be calculated on whatever csvs
 are in that folder. 
-   
+
+
    
  7. ###Calculate Hydrolysis Rates using FlaRatesEN556_bulk.R and FlaRatesEN556_GF.R
  
@@ -119,11 +128,11 @@ are in that folder.
      
             `git pull`
             
-       * This will update any files that I've changed since the last time you pulled or cloned the library
+        * This will update any files that I've changed since the last time you pulled or cloned the library
    
      2. If you just downloaded the zip file (a la step 1)ii) ), you'll have to download again,
       unzip and copy everything into your working directory again
-       * When asked 'file already exists, do you want to replace it?' say yes. 
+        * When asked 'file already exists, do you want to replace it?' say yes. 
    
    2. You should now have the following additional scripts and reference files in your wd:
    

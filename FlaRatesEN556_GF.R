@@ -24,13 +24,17 @@ VolsFilt <- read.csv("VolumesFilteredEN556_GF.csv",header=TRUE,row.names=1)
 #Read in info about mw of substrates and the # of cuts needed to get to a certain std size bin
 cuts <- read.csv("HydrolysisCutsInfo.csv", header=TRUE, row.names=1)
 #Read in table of sampling times and the Elapsed Time since t0
-FLAElapsed <- read.csv("FlaElapsedTimeEN556.csv", header=TRUE, row.names=1)
+FLAElapsed <- read.csv("FlaTimepointsStdRefsEN556.csv", header=TRUE, row.names=1)
 #FLAMaster is the main sheet where you will record all your rates info; it contains other metadata you want too
-outputMaster <- "FlaMasterListEN556.csv"
-FLAMaster <- read.csv(outputMaster,header=TRUE,row.names=1)
+outputMaster <- "FlaMasterListEN556_GF.csv"
 #Read in info about which std bins to use for which samples
-StdsForRates <- FLAMaster[,"std.ref",drop=FALSE]
+StdsForRates <- FLAElapsed[,"std.ref",drop=FALSE]
 
+if(file.exists(outputMaster)==TRUE) {
+    FLAMaster <- read.csv(outputMaster,header=TRUE,row.names=1)  
+} else {
+    FLAMaster <- list()
+}
 #Make parent lists that divide csvs into useful groups for later 
 #make a list of all the csv file names in the CsvDir folder 
 CsvNameList <- list.files(path=CsvDir,pattern="*.csv")
@@ -69,7 +73,7 @@ print(summary(TimeList))
 
 for (j in 1:length(RatesMasterList)) {
     #Detect which std bins to use for this incubation set
-    stdsID <- as.character(StdsForRates[names(TimeList[[j]][1]),])
+    stdsID <- as.character(StdsForRates[names(RatesMasterList[[j]][1]),])
     #Read in info about cutoffs for std bins from csv with correct stds
     StdBins <- read.csv(paste(stdsID,".csv",sep=""),header=TRUE)
     #Define std bins from StdBins.csv
@@ -204,12 +208,19 @@ for (j in 1:length(RatesMasterList)) {
         print(finalR)
         
         #make sure colnames of FLAMaster match colnames finalR. If don't, throw a warning
-        if (all(names(finalR) %in% colnames(FLAMaster)==TRUE)==FALSE) {
-            print("WARNING: final rates trying to insert do not match destination column names. Fix FLAMaster or finalR column names")
-        }
+        #if (all(names(finalR) %in% colnames(FLAMaster)==TRUE)==FALSE) {
+         #   print("WARNING: final rates trying to insert do not match destination column names. Fix FLAMaster or finalR column names")
+        #}
         
         #Write rates before kill corrected (R2) and kill corrected rates (kcR2 to correct row and columns in FLA Master Sheet)
-        FLAMaster[names(TimeList[[j]][x]),names(finalR)] <- finalR
+        if (class(FLAMaster)=="data.frame") {
+            FLAMaster[names(TimeList[[j]][x]),names(finalR)] <- finalR
+        } else {
+            FLAMaster[[names(TimeList[[j]][x])]] <- finalR
+            FLAMaster <- do.call("rbind",FLAMaster)
+            FLAMaster <- as.data.frame(FLAMaster)
+        }
+        #FLAMaster[names(TimeList[[j]][x]),names(finalR)] <- finalR
         
         print("FLAMaster inserts:")
         print(FLAMaster[names(TimeList[[j]][x]),])
