@@ -22,6 +22,7 @@ inc_vol = 0.006
 filter_frac = (1/12)
 #vector of which fluorophores used for diff substrates
 stdslopes <- c("a"=m.muf,"b"=m.muf,"L"=m.mca,"p1"=m.mca,"p2"=m.mca,"p3"=m.mca,"p4"=m.mca)
+filter_split <- c("a"="C","b"="C","L"="B","p1"="B","p2"="B","p3"="B","p4"="B")
 
 library(ggplot2)
 library(reshape2)
@@ -114,7 +115,7 @@ for (inc in 1:length(ExptList)) {
             slopedf[title,paste(timep,"sd",sep="_")] <- sd_slope
         }
         #divide slopedf by ratio of volume filtered/incubation volume to get volume-corrected rates
-        volume_filtered_l <- (vol_filt[partial,"volume.filtered.mL"]/1000)*filter_frac
+        volume_filtered_l <- (vol_filt[paste(partial,as.character(filter_split[substrate]),sep="-"),"volume.filtered.mL"]/1000)*filter_frac
         ratio <- volume_filtered_l/inc_vol
         slopedf <- slopedf/ratio
         #divide max slopes by m.muf or m.mca (depending on substrate) to get rates
