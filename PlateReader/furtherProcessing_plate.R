@@ -31,7 +31,7 @@ bulk_final <- cbind(bulk_factors, bulk)
 #bulk_factors$site <- gsub(pattern="stn([0-9])-d([0-9])-bulk-([a-zA-Z0-9]+)",replacement="stn\\1.d\\2",x=rownames(bulk))
 #save as factorsbulk
 
-write.csv(bulk_final, "EN556_RatesWithFactorsBulk.csv",row.names=TRUE)
+write.csv(bulk_final, "EN556_plate_RatesWithFactorsBulk.csv",row.names=TRUE)
 
 ######################## gf ##########################
 gf <- read.csv("EN556_plate_ratesGF.csv",row.names=1)
@@ -69,9 +69,9 @@ write.csv(gf_final, "EN556_plate_RatesWithFactorsGF.csv",row.names=TRUE)
 lv <- read.csv("EN556_plate_ratesLV.csv",row.names=1)
 #if rate below zero, change to zero
 for (row in 1:nrow(lv)) { 
-    if (lv_factors[row,"average"]<0) {
-        lv_factors[row,"average"] = 0
-        lv_factors[row,"std_dev"] = 0
+    if (lv[row,"average"]<0) {
+        lv[row,"average"] = 0
+        lv[row,"std_dev"] = 0
     }
 }
 

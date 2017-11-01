@@ -118,6 +118,8 @@ for (inc in 1:length(ExptList)) {
         
         #find mean rate over all timepoints for each rep
         rate <- colMeans(ratesdf)
+        #any rates below zero change to zero
+        rate[rate<0] = 0
         #take avg and sd all reps record as avg_potential_rate; potential_sd
         avg <- mean(rate, na.rm=TRUE)
         avg_sd <- sd(rate, na.rm=TRUE)
