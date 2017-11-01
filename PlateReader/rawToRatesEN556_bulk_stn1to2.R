@@ -6,7 +6,7 @@
 #Where are your .raw data files
 RawDir <- "raw-for-rates-stn1to2"
 #what do you want your filename for your rate calcs to be
-master <- "Plate_RatesBulk_stn1to2_EN556.csv"
+master <- "EN556_plate_ratesBulk_stn1to2.csv"
 #where is your time sampled/elapsed time info stored?
 timesheet <- "PlateTimesheet_EN556.csv"
 #name of folder you want your output visualizations to be in
@@ -26,6 +26,7 @@ library(plyr)
 library(RColorBrewer)
 #define color palette for flvstime plots
 substrateColors <- brewer.pal(n=7,name="Dark2")
+
 
 #Read in PlateMaster and PlateTimesheet need to record calculations and calculate rates, etc.
 #Define colClasses to be TimeSampled=POSIXct and ElapsedTime=numeric(?); may need use strptime
@@ -50,7 +51,7 @@ for (file in RawNameListBulk) {
     #arranges files into useful hierarchy (all timepoints from one expt together), 
     #and reads in file, only columns 1-7 rows A-F, and renaming the columns/rows
     #a list of a list of data frames 
-    ExptList[[PartialName]][[FullName]] = read.table(paste(RawDir,file,sep="/"), skip=4, na.strings=c("NA","LOW"),row.names=c("x1","x2","x3","live1","live2","live3"), col.names=c("a","b","L","p1","p2","p3","p4", rep("empty",5)), colClasses = c("NULL",rep("integer", 7), rep("NULL", 5)), nrows=6)
+    ExptList[[PartialName]][[FullName]] = read.table(paste(RawDir,file,sep="/"), skip=4, na.strings=c("NA","LOW"),row.names=c("x1","x2","x3","rep1_rate","rep2_rate","rep3_rate"), col.names=c("a","b","L","p1","p2","p3","p4", rep("empty",5)), colClasses = c("NULL",rep("integer", 7), rep("NULL", 5)), nrows=6)
 }
 
 #calculate change in fluorescence over time for each substrate, plot and save as png in pngDir
@@ -59,7 +60,7 @@ for (file in RawNameListBulk) {
 #for each partial name list in ExptList, 
 for (inc in 1:length(ExptList)) {
     #define fl.list which contains fl.change matrix for each substrate in partial name
-    mat <- matrix(nrow=10,ncol=7,dimnames=list(c("t0","t1","t2","t3","t4","t5","t6","t7","t8","t9"),c("hr","x1","x2","x3","live1","live2","live3")))
+    mat <- matrix(nrow=10,ncol=7,dimnames=list(c("t0","t1","t2","t3","t4","t5","t6","t7","t8","t9"),c("hr","x1","x2","x3","rep1_rate","rep2_rate","rep3_rate")))
     fl.list <- list("a"=mat,"b"=mat,"L"=mat,"p1"=mat,"p2"=mat,"p3"=mat,"p4"=mat)
     flchange.list <- list("a"=data.frame(),"b"=data.frame(),"L"=data.frame(),"p1"=data.frame(),"p2"=data.frame(),"p3"=data.frame(),"p4"=data.frame())
     
@@ -83,11 +84,11 @@ for (inc in 1:length(ExptList)) {
         #remove any rows with ALL NA (leaves any with one or two NAs) (e.g. if there are less than 10 timepoints)
         NArows <- apply(fl.change, 1, function(x) all(is.na(x)))
         fl.change <- fl.change[!NArows,]
-        #if any of the fluorescence columns have values below 20 (no fluorophore), remove
-        fl.change <- fl.change[!c("hr"=0,colMeans(fl.change[2:ncol(fl.change)]<20))==TRUE]
+        #if any of the fluorescence columns have values below 20 (no fluorophore), change to NA
+        fl.change[colnames(fl.change[c("hr"=0,colMeans(fl.change[2:ncol(fl.change)]<20))==TRUE])] = NA
         #take mean all kill reps, subtract from live reps to get kill corrected fluorescence
         fl.change$xmean <- rowMeans(fl.change[,grep("x",colnames(fl.change))])
-        fl.change.kc <- fl.change[,grep("live",colnames(fl.change))]-fl.change$xmean
+        fl.change.kc <- fl.change[,grep("rep",colnames(fl.change))]-fl.change$xmean
         fl.change.kc <- data.frame(hr=fl.change$hr,fl.change.kc)
         
         #for each live rep, find slope of increase in FL for each timepoint 
@@ -95,46 +96,36 @@ for (inc in 1:length(ExptList)) {
         title <- paste(names(ExptList[inc]),names(fl.list[substrate]),sep="-")
         #create data frame to store maximum slopes in
         slopedf <- data.frame()
-        #for each column (rep) in fl.change (skip hr column), slide frame, find max slope and record in slopedf
+        #for each column (rep) in fl.change (skip hr column), slide frame, find slope and record timepoint in slopedf
         for (tp in 2:nrow(fl.change.kc)) {
             changeFL <- (fl.change.kc[tp,]-fl.change.kc[1,])[,2:ncol(fl.change.kc)]
             hr <- fl.change.kc[tp,"hr"]
-            mean_slope <- rowMeans(changeFL/hr)
-            sd_slope <- sd(changeFL/hr)
-            timep <- names(mean_slope)
-            
-            #add to slopedf dataframe
-            slopedf[title,paste(timep,"rate",sep="_")] <- mean_slope
-            slopedf[title,paste(timep,"sd",sep="_")] <- sd_slope
+            slopedf <- rbind(slopedf, changeFL/hr)
         }
         #divide max slopes by m.muf or m.mca (depending on substrate) to get rates
         m.fluorophore <- stdslopes[[names(fl.list[substrate])]]
         ratesdf <- slopedf/m.fluorophore
         
-        #find mean rate of all timepoints, record as avg_potential_rate; potential_sd
-        avg <- rowMeans(ratesdf[title,grep("rate",colnames(ratesdf))])
-        avg_sd <- sd(ratesdf[title,grep("rate",colnames(ratesdf))])
+        #find mean rate over all timepoints for each rep
+        rate <- colMeans(ratesdf)
+        #take avg and sd all reps record as avg_potential_rate; potential_sd
+        avg <- mean(rate, na.rm=TRUE)
+        avg_sd <- sd(rate, na.rm=TRUE)
+        #create row of rates 
+        rate <- append(rate, c("average"=avg, "std_dev"=avg_sd))
         
         #find max rate timepoint, record as max_mean and max_sd, and record which tp is max_timepoint
-        max_rate <- max(ratesdf[title,grep("rate",colnames(ratesdf))])
-        tp_id <- substr(names(ratesdf[match(ratesdf,max_rate,nomatch=0)==1])[1],1,2)
-        max_sd <- ratesdf[,paste(tp_id,"sd",sep="_")]
+        #max_rate <- max(ratesdf[title,grep("rate",colnames(ratesdf))])
+        #tp_id <- substr(names(ratesdf[match(ratesdf,max_rate,nomatch=0)==1])[1],1,2)
+        #max_sd <- ratesdf[,paste(tp_id,"sd",sep="_")]
         
-        ratesdf[title,"max_mean"] <- max_rate
-        ratesdf[title,"max_sd"] <- max_sd
-        ratesdf[title,"max_timepoint_id"] <- tp_id
-        ratesdf[title,"avg_potential_rate"] <- avg
-        ratesdf[title,"potential_sd"] <- avg_sd
-        
-        #add rowname column so can write to csv later
-        ratesdf$rowname <- title
-        
-        #insert rates into master sheet
-        plateMasterBulk <- rbind.fill(plateMasterBulk,ratesdf)
+        newrow <- data.frame(as.list(rate))
+        row.names(newrow) = title
+        plateMasterBulk <- rbind(plateMasterBulk, newrow)
         
         #insert fl.change.kc into flchange.list so can plot 
-        fl.change.kc$mean <- rowMeans(fl.change.kc[,grep("live",colnames(fl.change.kc))])
-        fl.change.kc$sd <- apply(fl.change.kc[,grep("live",colnames(fl.change.kc))],1,sd)
+        fl.change.kc$mean <- rowMeans(fl.change.kc[,grep("rep",colnames(fl.change.kc))])
+        fl.change.kc$sd <- apply(fl.change.kc[,grep("rep",colnames(fl.change.kc))],1,sd)
         flchange.list[[substrate]] <- fl.change.kc
     }
     if (savepng==TRUE) {
@@ -148,6 +139,6 @@ for (inc in 1:length(ExptList)) {
     }
 }
 #write new plateMasterBulk to new csv
-write.csv(plateMasterBulk[!colnames(plateMasterBulk)%in%"rowname"],file=master,row.names=plateMasterBulk$rowname)
+write.csv(plateMasterBulk,file=master,row.names=TRUE)
 print(paste("Your output file", master, "looks like this:"))
 print(head(plateMasterBulk))

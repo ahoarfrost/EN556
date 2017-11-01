@@ -1,78 +1,106 @@
 #further processing for EN556 plate reader (all 8 stns)
 
 ######################## bulk ##########################
-bulk1 <- read.csv("Plate_RatesBulk_stn1to2_EN556.csv",header=TRUE,row.names=1)
-bulk2 <- read.csv("Plate_RatesBulk_stn3to8_EN556.csv",header=TRUE,row.names=1)
+bulk1 <- read.csv("EN556_plate_ratesBulk_stn1to2.csv",header=TRUE,row.names=1)
+bulk2 <- read.csv("EN556_plate_ratesBulk_stn3to8.csv",header=TRUE,row.names=1)
 bulk <- rbind(bulk1,bulk2)
-#subset impt columns
-bulk_factors <- data.frame(row.names=rownames(bulk),"max_rate"=bulk$max_mean, "max_sd"=bulk$max_sd,"max_timepoint_id"=bulk$max_timepoint_id,"avg_potential_rate"=bulk$avg_potential_rate,"avg_sd"=bulk$potential_sd)
 #if rate is below 0, change to zero
-for (row in 1:nrow(bulk_factors)) { 
-    if (bulk_factors[row,"max_rate"]<0) {
-        bulk_factors[row,"max_rate"] = 0
-        bulk_factors[row,"max_sd"] = 0
-    }
-    if (bulk_factors[row,"avg_potential_rate"]<0) {
-        bulk_factors[row,"avg_potential_rate"] = 0
-        bulk_factors[row,"avg_sd"] = 0
+for (row in 1:nrow(bulk)) { 
+    if (bulk[row,"average"]<0) {
+        bulk[row,"average"] = 0
+        bulk[row,"std_dev"] = 0
     }
 }
 #add factors
-bulk_factors$stn <- gsub(pattern="stn([0-9])-d([0-9])-bulk-([a-zA-Z0-9]+)",replacement="stn\\1",x=rownames(bulk))
-bulk_factors$depthid <- gsub(pattern="stn([0-9])-d([0-9])-bulk-([a-zA-Z0-9]+)",replacement="d\\2",x=rownames(bulk))
-bulk_factors$substrate <- gsub(pattern="stn([0-9])-d([0-9])-bulk-([a-zA-Z0-9]+)",replacement="\\3",x=rownames(bulk))
-bulk_factors$site <- gsub(pattern="stn([0-9])-d([0-9])-bulk-([a-zA-Z0-9]+)",replacement="stn\\1.d\\2",x=rownames(bulk))
+bulk_factors <- data.frame("cast_no"=rep("", nrow(bulk)))
+bulk_factors$station_no <- gsub(pattern="stn([0-9])-d([0-9])-bulk-([a-zA-Z0-9]+)",replacement="stn\\1",x=rownames(bulk))
+bulk_factors$depth_no <- gsub(pattern="stn([0-9])-d([0-9])-bulk-([a-zA-Z0-9]+)",replacement="d\\2",x=rownames(bulk))
+bulk_factors$depth_m <- ""
+
+substrates <- gsub(pattern="stn([0-9])-d([0-9])-bulk-([a-zA-Z0-9]+)",replacement="\\3",x=rownames(bulk))
+substrates <- gsub("a", "a-glu", substrates)
+substrates <- gsub("b", "b-glu", substrates)
+substrates <- gsub("p1", "AAF", substrates)
+substrates <- gsub("p2", "AAPF", substrates)
+substrates <- gsub("p3", "QAR", substrates)
+substrates <- gsub("p4", "FSR", substrates)
+bulk_factors$substrate <- substrates 
+
+bulk_final <- cbind(bulk_factors, bulk)
+
+#bulk_factors$site <- gsub(pattern="stn([0-9])-d([0-9])-bulk-([a-zA-Z0-9]+)",replacement="stn\\1.d\\2",x=rownames(bulk))
 #save as factorsbulk
-write.csv(bulk_factors, "plate_RatesWithFactorsBulk_EN556.csv",row.names=TRUE)
+
+write.csv(bulk_final, "EN556_RatesWithFactorsBulk.csv",row.names=TRUE)
 
 ######################## gf ##########################
-gf <- read.csv("Plate_RatesGF_EN556.csv",row.names=1)
-#subset impt columns
-gf_factors <- data.frame(row.names=rownames(gf),"max_rate"=gf$max_mean, "max_sd"=gf$max_sd,"max_timepoint_id"=gf$max_timepoint_id,"avg_potential_rate"=gf$avg_potential_rate,"avg_sd"=gf$potential_sd)
+gf <- read.csv("EN556_plate_ratesGF.csv",row.names=1)
 #if rate below zero, change to zero
-for (row in 1:nrow(gf_factors)) { 
-    if (gf_factors[row,"max_rate"]<0) {
-        gf_factors[row,"max_rate"] = 0
-        gf_factors[row,"max_sd"] = 0
-    }
-    if (gf_factors[row,"avg_potential_rate"]<0) {
-        gf_factors[row,"avg_potential_rate"] = 0
-        gf_factors[row,"avg_sd"] = 0
+for (row in 1:nrow(gf)) { 
+    if (gf[row,"average"]<0) {
+        gf[row,"average"] = 0
+        gf[row,"std_dev"] = 0
     }
 }
 #add factors
-gf_factors$stn <- gsub(pattern="stn([0-9])-d([0-9])-GF-([a-zA-Z0-9]+)",replacement="stn\\1",x=rownames(gf))
-gf_factors$depthid <- gsub(pattern="stn([0-9])-d([0-9])-GF-([a-zA-Z0-9]+)",replacement="d\\2",x=rownames(gf))
-gf_factors$substrate <- gsub(pattern="stn([0-9])-d([0-9])-GF-([a-zA-Z0-9]+)",replacement="\\3",x=rownames(gf))
-gf_factors$site <- gsub(pattern="stn([0-9])-d([0-9])-GF-([a-zA-Z0-9]+)",replacement="stn\\1.d\\2",x=rownames(gf))
+gf_factors <- data.frame("cast_no"=rep("", nrow(gf)))
+gf_factors$station_no <- gsub(pattern="stn([0-9])-d([0-9])-GF-([a-zA-Z0-9]+)",replacement="stn\\1",x=rownames(gf))
+gf_factors$depth_no <- gsub(pattern="stn([0-9])-d([0-9])-GF-([a-zA-Z0-9]+)",replacement="d\\2",x=rownames(gf))
+gf_factors$depth_m <- ""
+
+substrates <- gsub(pattern="stn([0-9])-d([0-9])-GF-([a-zA-Z0-9]+)",replacement="\\3",x=rownames(gf))
+substrates <- gsub("a", "a-glu", substrates)
+substrates <- gsub("b", "b-glu", substrates)
+substrates <- gsub("p1", "AAF", substrates)
+substrates <- gsub("p2", "AAPF", substrates)
+substrates <- gsub("p3", "QAR", substrates)
+substrates <- gsub("p4", "FSR", substrates)
+gf_factors$substrate <- substrates
+
+filter_um <- rep("3", nrow(gf))
+
+gf_final <- cbind(gf_factors, gf)
+gf_final$filter_um <- filter_um
+
 #save as factorsgf
-write.csv(gf_factors, "plate_RatesWithFactorsGF_EN556.csv",row.names=TRUE)
+write.csv(gf_final, "EN556_plate_RatesWithFactorsGF.csv",row.names=TRUE)
 
 ######################## lv ##########################
-lv <- read.csv("Plate_RatesLV_EN556.csv",row.names=1)
-#subset impt columns
-lv_factors <- data.frame(row.names=rownames(lv),"max_rate"=lv$max_mean, "max_sd"=lv$max_sd,"max_timepoint_id"=lv$max_timepoint_id,"avg_potential_rate"=lv$avg_potential_rate,"avg_sd"=lv$potential_sd)
+lv <- read.csv("EN556_plate_ratesLV.csv",row.names=1)
 #if rate below zero, change to zero
-for (row in 1:nrow(lv_factors)) { 
-    if (lv_factors[row,"max_rate"]<0) {
-        lv_factors[row,"max_rate"] = 0
-        lv_factors[row,"max_sd"] = 0
-    }
-    if (lv_factors[row,"avg_potential_rate"]<0) {
-        lv_factors[row,"avg_potential_rate"] = 0
-        lv_factors[row,"avg_sd"] = 0
+for (row in 1:nrow(lv)) { 
+    if (lv_factors[row,"average"]<0) {
+        lv_factors[row,"average"] = 0
+        lv_factors[row,"std_dev"] = 0
     }
 }
+
 #add factors
-lv_factors$stn <- gsub(pattern="stn([0-9])-d([0-9])-LV-([a-z0-9]+)-subt([0-9])-([a-zA-Z0-9]+)",replacement="stn\\1",x=rownames(lv))
-lv_factors$depthid <- gsub(pattern="stn([0-9])-d([0-9])-LV-([a-z0-9]+)-subt([0-9])-([a-zA-Z0-9]+)",replacement="d\\2",x=rownames(lv))
-lv_factors$treatment <- gsub(pattern="stn([0-9])-d([0-9])-LV-([a-z0-9]+)-subt([0-9])-([a-zA-Z0-9]+)",replacement="\\3",x=rownames(lv))
-lv_factors$subt <- gsub(pattern="stn([0-9])-d([0-9])-LV-([a-z0-9]+)-subt([0-9])-([a-zA-Z0-9]+)",replacement="subt\\4",x=rownames(lv))
-lv_factors$substrate <- gsub(pattern="stn([0-9])-d([0-9])-LV-([a-z0-9]+)-subt([0-9])-([a-zA-Z0-9]+)",replacement="\\5",x=rownames(lv))
-lv_factors$site <- gsub(pattern="stn([0-9])-d([0-9])-LV-([a-z0-9]+)-subt([0-9])-([a-zA-Z0-9]+)",replacement="stn\\1.d\\2",x=rownames(lv))
+lv_factors <- data.frame("cast_no"=rep("",nrow(lv)))
+lv_factors$station_no <- gsub(pattern="stn([0-9])-d([0-9])-LV-([a-z0-9]+)-subt([0-9])-([a-zA-Z0-9]+)",replacement="stn\\1",x=rownames(lv))
+lv_factors$depth_no <- gsub(pattern="stn([0-9])-d([0-9])-LV-([a-z0-9]+)-subt([0-9])-([a-zA-Z0-9]+)",replacement="d\\2",x=rownames(lv))
+lv_factors$depth_m <- ""
+
+substrates <- gsub(pattern="stn([0-9])-d([0-9])-LV-([a-z0-9]+)-subt([0-9])-([a-zA-Z0-9]+)",replacement="\\5",x=rownames(lv))
+substrates <- gsub("a", "a-glu", substrates)
+substrates <- gsub("b", "b-glu", substrates)
+substrates <- gsub("p1", "AAF", substrates)
+substrates <- gsub("p2", "AAPF", substrates)
+substrates <- gsub("p3", "QAR", substrates)
+substrates <- gsub("p4", "FSR", substrates)
+lv_factors$substrate <- substrates
+
+#this is the subtimepoint that LVs were sampled (not the plate reader timepoint when plate was read)
+lv_factors$timepoint <- gsub(pattern="stn([0-9])-d([0-9])-LV-([a-z0-9]+)-subt([0-9])-([a-zA-Z0-9]+)",replacement="t\\4",x=rownames(lv)) 
+lv_factors$time_elapsed_hr <- ""
+
+lv_factors$treatment <- gsub(pattern="stn([0-9])-d([0-9])-LV-([a-z]+)([0-9]+)-subt([0-9])-([a-zA-Z0-9]+)",replacement="\\3",x=rownames(lv))
+lv_factors$meso_no <- gsub(pattern="stn([0-9])-d([0-9])-LV-([a-z0-9]+)-subt([0-9])-([a-zA-Z0-9]+)",replacement="\\3",x=rownames(lv))
+
+lv_final <- cbind(lv_factors, lv)
 
 #save as factorslv
-write.csv(lv_factors, "plate_RatesWithFactorsLV_EN556.csv",row.names=TRUE)
+write.csv(lv_final, "EN556_plate_RatesWithFactorsLV.csv",row.names=FALSE)
 
 #create summary for amend and unamend at each site
 #summary <- matrix(dimnames=list(NULL,c("mean","sd",colnames(subsub[,6:11]))),ncol=8)
