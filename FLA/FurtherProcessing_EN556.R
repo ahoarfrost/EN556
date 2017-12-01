@@ -60,7 +60,7 @@ write.csv(maxes.bulk,"FlaMaxRatesFinalEN556_bulk.csv",row.names=TRUE)
 
 
 ###GF processing
-gf <- read.csv("EN556_FLA_ratesGF.csv",header=TRUE, row.names=1)
+gf <- read.csv("EN556_FLA_ratesFinalGF.csv",header=TRUE, row.names=1)
 
 #add factors
 gf_factors <- data.frame("cast_no"=rep("", nrow(gf)))
@@ -85,7 +85,7 @@ gf_factors$std_dev <- gf$sd.kcrate.nM.hr
 
 gf_factors$filter_um <- "3"
 
-write.csv(gf_factors,"FlaRatesWithFactorsEN556_GF.csv",row.names=FALSE)
+write.csv(gf_factors,"EN556_FLA_ratesFinalGF.csv",row.names=FALSE)
 
 ##max rates
 maxes.gf <- matrix(ncol=ncol(factors.gf),dimnames=list(NULL,colnames(factors.gf)))
